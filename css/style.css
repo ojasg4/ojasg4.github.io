@@ -1,0 +1,425 @@
+/* =============================================================
+   Ojas Gupta — personal site
+   Plain CSS, no build step. Dark editorial theme.
+   Colors are placeholders (neutral dark) until a real accent is
+   pulled from the hero image. Tweak the custom properties below.
+   ============================================================= */
+
+:root {
+  --bg: #0a0e0c;
+  --bg-elev: #10161200;      /* header bg (alpha driven by JS on scroll) */
+  --fg: #eef2ee;
+  --fg-dim: #97a29a;
+  --hairline: #232a25;
+  --accent: #7fae8f;          /* TODO: replace with a hue pulled from the image */
+
+  /* Geometry shared with main.js (kept in sync on resize). */
+  --header-h: 64px;
+  --big: 400px;               /* large hero image size, set by JS */
+  --content-pad: clamp(1.25rem, 5vw, 4rem);
+  --maxw: 760px;
+
+  --serif: Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* { margin: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; }
+
+/* =============================================================
+   HEADER BAR
+   ============================================================= */
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  min-height: var(--header-h);   /* grows if the nav wraps on narrow screens */
+  z-index: 100;
+  background: rgba(12, 17, 14, 0);       /* alpha set via JS (.scrolled) */
+  border-bottom: 1px solid transparent;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+.site-header.scrolled {
+  background: rgba(12, 17, 14, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom-color: var(--hairline);
+}
+
+.site-header__inner {
+  min-height: var(--header-h);
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 8px var(--content-pad);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Reserves the width the docked brand image occupies so nav never
+   slides under it. Width tracks the small (docked) image size. */
+.site-header__brand-slot {
+  flex: 0 0 auto;
+  width: calc(var(--header-h) - 16px);
+  height: calc(var(--header-h) - 16px);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: clamp(0.75rem, 2.5vw, 1.6rem);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.nav a {
+  text-decoration: none;
+  color: var(--fg-dim);
+  padding: 0.25rem 0;
+  transition: color 0.2s ease;
+}
+.nav a:hover,
+.nav a:focus-visible { color: var(--fg); }
+
+/* =============================================================
+   MORPHING BRAND IMAGE
+   Fixed element; width/height/left/top are written by main.js as
+   a function of scroll progress (hero → header).
+   ============================================================= */
+.brand {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--big);
+  height: var(--big);
+  z-index: 110;
+  display: block;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  will-change: width, height, left, top;
+  -webkit-tap-highlight-color: transparent;
+}
+.brand:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.brand__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* =============================================================
+   HERO
+   ============================================================= */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  padding-top: var(--header-h);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+}
+
+/* Invisible spacer matching the large image so the name/tagline
+   flow below it. Size tracks --big. */
+.hero__slot {
+  flex: 0 0 auto;
+  width: var(--big);
+  height: var(--big);
+  margin-top: clamp(1.5rem, 6vh, 4rem);
+}
+
+.hero__text {
+  padding: clamp(1.5rem, 4vh, 2.5rem) var(--content-pad) 0;
+  will-change: opacity, transform;
+}
+.hero__name {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 8vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+.hero__tagline {
+  margin-top: 0.9rem;
+  color: var(--fg-dim);
+  font-size: clamp(0.95rem, 2.6vw, 1.2rem);
+  max-width: 34ch;
+  margin-inline: auto;
+}
+.hero__scroll {
+  margin-top: clamp(1.5rem, 5vh, 3rem);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+/* =============================================================
+   CONTENT SECTIONS — editorial, continuous scroll
+   ============================================================= */
+.content {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--content-pad);
+}
+
+.section {
+  padding: clamp(3.5rem, 11vh, 7rem) 0;
+  border-top: 1px solid var(--hairline);
+}
+.section:first-child { border-top: none; }
+
+.section__kicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+.lede {
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 3.4vw, 1.7rem);
+  line-height: 1.45;
+  max-width: 30ch;
+  color: var(--fg);
+}
+.section--about .lede { max-width: 40ch; }
+
+/* Research — asymmetric two-column entries that stack on mobile */
+.entry {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.4fr) 1fr;
+  gap: clamp(1rem, 4vw, 3rem);
+  padding: clamp(1.75rem, 5vh, 2.75rem) 0;
+  border-top: 1px solid var(--hairline);
+}
+.section--research .section__kicker + .entry { border-top: none; }
+.entry__where {
+  font-size: 0.85rem;
+  color: var(--fg-dim);
+  letter-spacing: 0.02em;
+}
+.entry__title {
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 3.4vw, 1.9rem);
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+  line-height: 1.15;
+}
+.entry__body p { color: var(--fg-dim); max-width: 52ch; }
+
+/* Projects — light stacked cards, no heavy SaaS shadow */
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: clamp(1.25rem, 4vw, 2.5rem);
+}
+.project {
+  padding-top: 1.4rem;
+  border-top: 2px solid var(--accent);
+}
+.project__title {
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 3.4vw, 1.7rem);
+  font-weight: 600;
+}
+.project__role {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin: 0.35rem 0 0.75rem;
+}
+.project p:not(.project__role) { color: var(--fg-dim); }
+
+/* Links & buttons */
+.link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--fg);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 2px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.link:hover, .link:focus-visible { color: var(--accent); }
+.link[aria-disabled="true"] { opacity: 0.55; pointer-events: none; }
+
+.btn {
+  display: inline-block;
+  margin-top: 1.4rem;
+  padding: 0.75rem 1.4rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--fg);
+  text-decoration: none;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.btn:hover, .btn:focus-visible { background: var(--accent); color: var(--bg); }
+.btn[aria-disabled="true"] { opacity: 0.55; pointer-events: none; }
+
+/* Contact */
+.contact-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.25rem, 5vw, 2.5rem);
+  padding: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 3.4vw, 1.6rem);
+}
+.contact-list .link { margin-top: 0; }
+.colophon {
+  margin-top: 2.5rem;
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+}
+
+/* =============================================================
+   BLOG — index page + individual posts
+   These pages have no hero; the brand stays docked in the header,
+   so content needs top clearance below the fixed bar.
+   ============================================================= */
+.page {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: calc(var(--header-h) + clamp(2.5rem, 8vh, 5rem))
+           var(--content-pad) clamp(4rem, 12vh, 7rem);
+}
+
+.page__title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 7vw, 3.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+.page__intro {
+  margin-top: 1rem;
+  color: var(--fg-dim);
+  max-width: 46ch;
+  font-size: clamp(1rem, 2.6vw, 1.15rem);
+}
+
+/* Post list, newest first */
+.posts { margin-top: clamp(2.5rem, 8vh, 4.5rem); }
+.post-item {
+  display: block;
+  text-decoration: none;
+  padding: clamp(1.5rem, 4vh, 2.25rem) 0;
+  border-top: 1px solid var(--hairline);
+  transition: border-color 0.2s ease;
+}
+.post-item:hover,
+.post-item:focus-visible { border-top-color: var(--accent); }
+.post-item__date {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.post-item__title {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 600;
+  margin: 0.4rem 0 0.5rem;
+  line-height: 1.15;
+  color: var(--fg);
+}
+.post-item__excerpt { color: var(--fg-dim); max-width: 60ch; }
+
+/* Individual post */
+.post__date {
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.post__title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  line-height: 1.08;
+  margin: 0.6rem 0 0.4rem;
+}
+.post__where { color: var(--fg-dim); font-size: 0.95rem; }
+.post__body {
+  margin-top: clamp(2rem, 6vh, 3rem);
+  font-size: clamp(1.05rem, 2.6vw, 1.2rem);
+  line-height: 1.7;
+}
+.post__body > * + * { margin-top: 1.25rem; }
+.post__body h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 4vw, 1.9rem);
+  margin-top: 2.5rem;
+}
+.back-link {
+  display: inline-block;
+  margin-top: clamp(3rem, 8vh, 5rem);
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+.back-link:hover, .back-link:focus-visible { color: var(--fg); }
+
+/* =============================================================
+   SCROLL REVEALS (progressive enhancement via IntersectionObserver)
+   Elements start hidden only if JS marks the document ready.
+   ============================================================= */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.js .reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* =============================================================
+   RESPONSIVE
+   ============================================================= */
+@media (max-width: 620px) {
+  .entry { grid-template-columns: 1fr; gap: 0.5rem; }
+  .nav { font-size: 0.72rem; letter-spacing: 0.04em; }
+}
+
+@media (max-width: 400px) {
+  .nav { gap: 0.7rem; }
+}
+
+/* =============================================================
+   ACCESSIBILITY — respect reduced motion
+   No scroll-linked morph, no smooth scroll, no reveal transitions.
+   main.js reads this and locks the image docked in the header.
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .brand { transition: none; will-change: auto; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .hero__scroll { display: none; }
+}

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ojas Gupta</title>
+  <meta name="description" content="Ojas Gupta — computational structural biology & protein machine learning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body id="top">
+
+  <!-- ============================================================
+       HEADER BAR
+       The morphing brand image (see #brand below) docks here on
+       scroll. Nav links sit to the right.
+       ============================================================ -->
+  <header class="site-header" id="siteHeader">
+    <div class="site-header__inner">
+      <!-- The brand image is a separate fixed element (#brand) so it
+           can morph between the hero and this bar. This span just
+           reserves the space it lands in. -->
+      <span class="site-header__brand-slot" aria-hidden="true"></span>
+      <nav class="nav" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#research">Research</a>
+        <a href="#projects">Projects</a>
+        <a href="blog.html">Blog</a>
+        <a href="#resume">Resume</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       MORPHING BRAND IMAGE
+       Loads large on page load (top half of the screen); on scroll
+       it shrinks and moves into the header bar. Clicking it returns
+       to the top (home). Sizing/position is driven from main.js.
+       ============================================================ -->
+  <a class="brand" id="brand" href="#top" aria-label="Ojas Gupta — back to top">
+    <!-- TODO: replace this placeholder data-URI with a real photo/logo,
+         e.g. src="assets/images/hero.jpg". Keep it roughly square. -->
+    <img
+      class="brand__img"
+      id="brandImg"
+      alt="Ojas Gupta"
+      decoding="async"
+      src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23161b18'/><stop offset='1' stop-color='%232a332d'/></linearGradient></defs><rect width='600' height='600' fill='url(%23g)'/><text x='50%25' y='53%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia, serif' font-size='150' font-weight='700' fill='%23e9efe9' letter-spacing='6'>OJAS</text><text x='50%25' y='72%25' text-anchor='middle' dominant-baseline='middle' font-family='system-ui, sans-serif' font-size='24' fill='%237f8c82' letter-spacing='2'>PLACEHOLDER IMAGE</text></svg>"
+    />
+  </a>
+
+  <!-- ============================================================
+       HERO — reserves space for the large image and holds the
+       name/tagline. The image itself is #brand, overlaid here.
+       ============================================================ -->
+  <section class="hero" id="hero">
+    <div class="hero__slot" aria-hidden="true"></div>
+    <div class="hero__text" id="heroText">
+      <h1 class="hero__name">Ojas Gupta</h1>
+      <p class="hero__tagline">
+        Computational structural biology &amp; protein machine learning
+      </p>
+      <p class="hero__scroll">scroll ↓</p>
+    </div>
+  </section>
+
+  <main class="content">
+
+    <!-- ================= ABOUT ================= -->
+    <section class="section section--about reveal" id="about">
+      <p class="section__kicker">About</p>
+      <p class="lede">
+        I'm a biomedical engineering senior at Georgia Tech working in
+        computational structural biology and protein machine learning.
+        I'm a DSI Scholar at the NIH/NLM in the Porter lab, with a minor
+        in Chemistry &amp; Biochemistry.
+      </p>
+    </section>
+
+    <!-- ================= RESEARCH ================= -->
+    <section class="section section--research" id="research">
+      <p class="section__kicker reveal">Research</p>
+
+      <article class="entry reveal">
+        <div class="entry__meta">
+          <span class="entry__where">NIH / NLM · Porter Lab</span>
+        </div>
+        <div class="entry__body">
+          <h3 class="entry__title">Fold-switching protein prediction</h3>
+          <p>
+            Predicting metamorphic proteins that adopt more than one stable
+            fold — a blind spot for single-structure predictors.
+          </p>
+          <!-- No paper/repo yet — links to the write-up. -->
+          <a class="link" href="blog/fold-switching.html">Read the blog post →</a>
+        </div>
+      </article>
+
+      <article class="entry reveal">
+        <div class="entry__meta">
+          <span class="entry__where">UCSF · Douglas Lab</span>
+        </div>
+        <div class="entry__body">
+          <h3 class="entry__title">DNA–protein hybrid nanostructures</h3>
+          <p>
+            Work with Dr. Douglas on engineered DNA–protein hybrid
+            assemblies.
+          </p>
+          <!-- No paper/repo yet — links to the write-up. -->
+          <a class="link" href="blog/dna-protein-hybrid.html">Read the blog post →</a>
+        </div>
+      </article>
+
+      <article class="entry reveal">
+        <div class="entry__meta">
+          <span class="entry__where">Emory University</span>
+        </div>
+        <div class="entry__body">
+          <h3 class="entry__title">Intrinsically disordered proteins</h3>
+          <p>
+            Studying the conformational behavior of intrinsically disordered
+            proteins (IDPs).
+          </p>
+          <!-- No paper/repo yet — links to the write-up. -->
+          <a class="link" href="blog/idp-emory.html">Read the blog post →</a>
+        </div>
+      </article>
+
+      <article class="entry reveal">
+        <div class="entry__meta">
+          <span class="entry__where">Kane Lab · npj Viruses</span>
+        </div>
+        <div class="entry__body">
+          <h3 class="entry__title">Nanobody engineering</h3>
+          <p>
+            Single-domain antibody work contributing to a published study in
+            <em>npj Viruses</em>.
+          </p>
+          <a class="link" href="https://pubmed.ncbi.nlm.nih.gov/40295895/"
+             target="_blank" rel="noopener">Paper →</a>
+        </div>
+      </article>
+    </section>
+
+    <!-- ================= PROJECTS ================= -->
+    <section class="section section--projects" id="projects">
+      <p class="section__kicker reveal">Projects</p>
+
+      <div class="projects">
+        <article class="project reveal">
+          <h3 class="project__title">BioConnect</h3>
+          <p class="project__role">Founder &amp; Executive Director</p>
+          <p>
+            A 150+ member biotech student organization connecting students
+            with research, industry, and each other.
+          </p>
+          <!-- TODO: link to BioConnect site -->
+          <a class="link" href="#" aria-disabled="true">Visit →</a>
+        </article>
+
+        <article class="project reveal">
+          <h3 class="project__title">Bindwell</h3>
+          <p class="project__role">Advisory</p>
+          <p>
+            Advisory work on protein–ligand binding prediction.
+          </p>
+          <!-- TODO: link to Bindwell -->
+          <a class="link" href="#" aria-disabled="true">Learn more →</a>
+        </article>
+
+        <!-- TODO: add additional side projects here -->
+      </div>
+    </section>
+
+    <!-- ================= RESUME ================= -->
+    <section class="section section--resume reveal" id="resume">
+      <p class="section__kicker">Resume</p>
+      <p class="lede">
+        A full resume is available as a PDF.
+      </p>
+      <!-- TODO: drop the real PDF at assets/resume.pdf and point this there -->
+      <a class="btn" href="#" aria-disabled="true" download>Download resume (PDF)</a>
+      <!-- Alternatively embed a styled HTML resume or a <object> PDF viewer here. -->
+    </section>
+
+    <!-- ================= CONTACT / FOOTER ================= -->
+    <footer class="section section--contact reveal" id="contact">
+      <p class="section__kicker">Contact</p>
+      <ul class="contact-list">
+        <li><a class="link" href="mailto:ojasgupta1000@gmail.com">Email</a></li>
+        <li><a class="link" href="https://www.linkedin.com/in/ojas--gupta/"
+               target="_blank" rel="noopener">LinkedIn</a></li>
+        <!-- TODO: add real GitHub URL -->
+        <li><a class="link" href="#" aria-disabled="true">GitHub</a></li>
+      </ul>
+      <p class="colophon">© <span id="year"></span> Ojas Gupta</p>
+    </footer>
+
+  </main>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
