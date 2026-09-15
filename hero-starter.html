@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Hero starter — scroll-scrubbed protein fold</title>
+<style>
+  :root { --bg: #0a0e0c; --fg: #eef2ee; }
+  * { margin: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font-family: system-ui, sans-serif; }
+
+  /* Tall spacer so there's scroll distance to scrub through */
+  .hero-wrap { height: 300vh; position: relative; }
+
+  .hero-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* The video is masked so it's only visible through the name's letterforms */
+  .masked-video {
+    width: min(90vw, 1100px);
+    aspect-ratio: 16 / 9;
+
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 300"><text x="50%25" y="60%25" text-anchor="middle" font-family="Georgia, serif" font-size="220" font-weight="700">OJAS</text></svg>');
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 300"><text x="50%25" y="60%25" text-anchor="middle" font-family="Georgia, serif" font-size="220" font-weight="700">OJAS</text></svg>');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
+
+  .masked-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+  }
+
+  .after-hero { padding: 4rem 2rem; max-width: 640px; margin: 0 auto; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="hero-wrap">
+  <div class="hero-sticky">
+    <div class="masked-video">
+      <!-- Swap this src for your rendered folding animation (WebM preferred, MP4 fallback) -->
+      <video id="foldVideo" muted playsinline preload="auto">
+        <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm">
+      </video>
+    </div>
+    <div class="scroll-hint">scroll ↓</div>
+  </div>
+</div>
+
+<div class="after-hero">
+  <h2>Below the fold (pun intended)</h2>
+  <p>This is where your research and project sections go. As the person scrolls past the hero,
+  the video has already finished scrubbing to its final frame — the folded structure sitting
+  inside the letterforms of your name.</p>
+</div>
+
+<script>
+  const video = document.getElementById('foldVideo');
+  const heroWrap = document.querySelector('.hero-wrap');
+
+  // Once metadata is loaded we know the video's duration, so we can map
+  // scroll progress through .hero-wrap directly onto video.currentTime.
+  video.addEventListener('loadedmetadata', () => {
+    const duration = video.duration;
+
+    function onScroll() {
+      const rect = heroWrap.getBoundingClientRect();
+      const scrollableDistance = heroWrap.offsetHeight - window.innerHeight;
+      const scrolled = -rect.top;
+      let progress = scrolled / scrollableDistance;
+      progress = Math.min(1, Math.max(0, progress));
+
+      video.currentTime = progress * duration;
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  });
+</script>
+
+</body>
+</html>
