@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog — Ojas Gupta</title>
+  <meta name="description" content="Writing by Ojas Gupta on protein science, structural biology, and machine learning." />
+  <link rel="stylesheet" href="css/style.css?v=2" />
+</head>
+<body id="top">
+
+  <header class="site-header" id="siteHeader">
+    <div class="site-header__inner">
+      <span class="site-header__brand-slot" aria-hidden="true"></span>
+      <nav class="nav" aria-label="Primary">
+        <a href="index.html#about">About</a>
+        <a href="index.html#research">Research</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="blog.html">Blog</a>
+        <a href="index.html#resume">Resume</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Brand docks in the header on this page (no hero); links home. -->
+  <a class="brand" id="brand" href="index.html" aria-label="Ojas Gupta — home">
+    <img
+      class="brand__img"
+      id="brandImg"
+      alt="Ojas Gupta"
+      decoding="async"
+      src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23161b18'/><stop offset='1' stop-color='%232a332d'/></linearGradient></defs><rect width='600' height='600' fill='url(%23g)'/><text x='50%25' y='53%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia, serif' font-size='150' font-weight='700' fill='%23e9efe9' letter-spacing='6'>OJAS</text></svg>"
+    />
+  </a>
+
+  <main class="page">
+    <h1 class="page__title">Blog</h1>
+    <p class="page__intro">
+      Notes on protein science, structural biology, and the machine
+      learning I use to poke at it. Write-ups of ongoing work that
+      doesn't have a paper yet live here.
+    </p>
+
+    <!-- Rendered from js/posts.js by js/blog.js: pinned first,
+         then newest-first by date. Edit posts.js to add/pin posts. -->
+    <div class="posts" id="postList"></div>
+    <noscript>
+      <p class="page__intro">Enable JavaScript to see the list of posts,
+      or browse them directly in the <code>/blog</code> folder.</p>
+    </noscript>
+
+    <!-- Signup box — appends each email to a Google Sheet (see js/subscribe.js). -->
+    <section class="subscribe" aria-labelledby="subTitle">
+      <h2 class="subscribe__title" id="subTitle">Get new posts by email</h2>
+      <p class="subscribe__note">
+        Drop your email and I’ll send a short note whenever I publish
+        something new. No spam, unsubscribe anytime.
+      </p>
+      <form class="subscribe__form" id="subForm" novalidate>
+        <input class="subscribe__input" id="subEmail" type="email" name="email"
+               autocomplete="email" placeholder="you@example.com"
+               aria-label="Your email address" required />
+        <button class="subscribe__btn" type="submit">Subscribe</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/posts.js?v=1" defer></script>
+  <script src="js/blog.js?v=1" defer></script>
+  <script src="js/subscribe.js?v=1" defer></script>
+</body>
+</html>
