@@ -45,8 +45,9 @@
     var smallW = smallH * a;
 
     // Large hero image: fit to width, then cap by height so it stays in the
-    // top half on tall/narrow screens.
-    var bigW = Math.min(vw * 0.9, 720);
+    // top half on tall/narrow screens. The cap is larger on desktop (>=1024)
+    // so the mark uses more space there; tablet/mobile keep the 720 cap.
+    var bigW = Math.min(vw * 0.9, vw >= 1024 ? 1040 : 720);
     var bigH = bigW / a;
     var maxBigH = vh * 0.42;
     if (bigH > maxBigH) { bigH = maxBigH; bigW = bigH * a; }

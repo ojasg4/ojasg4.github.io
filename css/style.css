@@ -641,6 +641,21 @@ a { color: inherit; }
 }
 
 /* =============================================================
+   DESKTOP — let the main page use more horizontal space.
+   Only applies at >=1024px, so the tablet (768) and mobile (375)
+   layouts above are untouched. Blog pages (.page) keep their
+   narrow reading width for legibility.
+   ============================================================= */
+@media (min-width: 1024px) {
+  .content { max-width: 1200px; }        /* aligns with the header bar */
+  .section--about .lede { max-width: 52ch; }
+  .lede { max-width: 42ch; }
+  .entry__body p { max-width: 68ch; }
+  .project p:not(.project__role) { max-width: 48ch; }
+  .hero__tagline { max-width: 40ch; }
+}
+
+/* =============================================================
    ACCESSIBILITY — respect reduced motion
    No scroll-linked morph, no smooth scroll, no reveal transitions.
    main.js reads this and locks the image docked in the header.
