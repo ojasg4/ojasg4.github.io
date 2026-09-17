@@ -15,7 +15,13 @@
 
   /* Geometry shared with main.js (kept in sync on resize). */
   --header-h: 64px;
-  --big: 400px;               /* large hero image size, set by JS */
+  /* Hero brand image geometry — all set by main.js from the image's
+     own aspect ratio (the mark is wide, not square). */
+  --big-w: 640px;             /* large hero image width */
+  --big-h: 222px;             /* large hero image height */
+  --dock-w: 128px;            /* docked (header) logo width */
+  --slot-mt: 3rem;            /* top margin above the hero image */
+  --header-pad: var(--header-h); /* actual header height (grows if nav wraps) */
   --content-pad: clamp(1.25rem, 5vw, 4rem);
   --maxw: 760px;
 
@@ -59,7 +65,8 @@ a { color: inherit; }
 
 .site-header__inner {
   min-height: var(--header-h);
-  max-width: var(--maxw);
+  max-width: 1200px;              /* wider than the content column so the
+                                     wide logo + nav fit on one line */
   margin: 0 auto;
   padding: 8px var(--content-pad);
   display: flex;
@@ -72,7 +79,7 @@ a { color: inherit; }
    slides under it. Width tracks the small (docked) image size. */
 .site-header__brand-slot {
   flex: 0 0 auto;
-  width: calc(var(--header-h) - 16px);
+  width: var(--dock-w);
   height: calc(var(--header-h) - 16px);
 }
 
@@ -103,24 +110,22 @@ a { color: inherit; }
   position: fixed;
   top: 0;
   left: 0;
-  width: var(--big);
-  height: var(--big);
+  width: var(--big-w);
+  height: var(--big-h);
   z-index: 110;
   display: block;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
   will-change: width, height, left, top;
   -webkit-tap-highlight-color: transparent;
 }
 .brand:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline-offset: 6px;
+  border-radius: 6px;
 }
 .brand__img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;   /* wide transparent mark — never crop it */
   display: block;
 }
 
@@ -130,7 +135,7 @@ a { color: inherit; }
 .hero {
   position: relative;
   min-height: 100vh;
-  padding-top: var(--header-h);
+  padding-top: var(--header-pad);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -139,12 +144,12 @@ a { color: inherit; }
 }
 
 /* Invisible spacer matching the large image so the name/tagline
-   flow below it. Size tracks --big. */
+   flow below it. Tracks the image's width/height. */
 .hero__slot {
   flex: 0 0 auto;
-  width: var(--big);
-  height: var(--big);
-  margin-top: clamp(1.5rem, 6vh, 4rem);
+  width: var(--big-w);
+  height: var(--big-h);
+  margin-top: var(--slot-mt);
 }
 
 .hero__text {
@@ -204,6 +209,31 @@ a { color: inherit; }
   color: var(--fg);
 }
 .section--about .lede { max-width: 40ch; }
+
+/* Pull quote — a thematic epigraph between sections */
+.quote-section { text-align: center; }
+.quote {
+  margin: 0 auto;
+  max-width: 24ch;
+}
+.quote__text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+.quote__text::before { content: "\201C"; }
+.quote__text::after  { content: "\201D"; }
+.quote__by {
+  margin-top: 1.4rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
 
 /* Research — asymmetric two-column entries that stack on mobile */
 .entry {
@@ -312,7 +342,7 @@ a { color: inherit; }
 .page {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: calc(var(--header-h) + clamp(2.5rem, 8vh, 5rem))
+  padding: calc(var(--header-pad) + clamp(2.5rem, 8vh, 5rem))
            var(--content-pad) clamp(4rem, 12vh, 7rem);
 }
 

@@ -14,9 +14,17 @@
   root.classList.add('js');
 
   var brand = document.getElementById('brand');
+  var brandImg = document.getElementById('brandImg');
   var header = document.getElementById('siteHeader');
   var hero = document.getElementById('hero');       // absent on blog pages
   var heroText = document.getElementById('heroText');
+
+  var ASPECT_FALLBACK = 2.889;   // width / height of assets/images/ojas.png
+  function aspect() {
+    return (brandImg && brandImg.naturalWidth && brandImg.naturalHeight)
+      ? brandImg.naturalWidth / brandImg.naturalHeight
+      : ASPECT_FALLBACK;
+  }
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
@@ -28,29 +36,50 @@
   function computeGeometry() {
     var vw = window.innerWidth;
     var vh = window.innerHeight;
+    var a = aspect();
 
     var headerH = clamp(Math.round(vh * 0.08), 56, 76);
-    var small = headerH - 16;                     // docked size
-    var big = Math.min(vw * 0.62, vh * 0.5, 440); // large hero size
 
-    // Where the small image docks: aligned with the content gutter.
+    // Docked (header) logo: sized by height so it fits the bar, width follows.
+    var smallH = headerH - 22;
+    var smallW = smallH * a;
+
+    // Large hero image: fit to width, then cap by height so it stays in the
+    // top half on tall/narrow screens.
+    var bigW = Math.min(vw * 0.9, 720);
+    var bigH = bigW / a;
+    var maxBigH = vh * 0.42;
+    if (bigH > maxBigH) { bigH = maxBigH; bigW = bigH * a; }
+
+    // Top margin above the image (mirrors the CSS clamp(1.5rem,6vh,4rem)).
+    var slotMt = clamp(vh * 0.06, 24, 64);
+
+    // Docked logo sits at the left padding of the header bar (max-width 1200).
     var contentPad = parseFloat(getComputedStyle(root).getPropertyValue('--content-pad')) || 24;
-    var gutter = Math.max((vw - 760) / 2, contentPad); // matches .site-header__inner
-    if (gutter < contentPad) gutter = contentPad;
+    var gutter = Math.max((vw - 1200) / 2, 0) + contentPad;
+
+    // Publish the values that affect header height first, then measure the
+    // header's ACTUAL height (it grows when the nav wraps on narrow screens)
+    // so the hero image and content clear it instead of hiding underneath.
+    root.style.setProperty('--header-h', headerH + 'px');
+    root.style.setProperty('--dock-w', smallW + 'px');
+    var headerActual = header ? Math.max(headerH, header.offsetHeight) : headerH;
 
     geo = {
       vw: vw, vh: vh,
       headerH: headerH,
-      big: big, small: small,
-      bigLeft: (vw - big) / 2,
-      bigTop: headerH + clamp((vh - headerH) * 0.1, 24, 90),
+      bigW: bigW, bigH: bigH, smallW: smallW, smallH: smallH,
+      bigLeft: (vw - bigW) / 2,
+      bigTop: headerActual + slotMt,      // clears the (possibly wrapped) header
       smallLeft: gutter,
-      smallTop: (headerH - small) / 2
+      smallTop: (headerH - smallH) / 2
     };
 
-    // Publish header height + big size so CSS spacers stay in sync.
-    root.style.setProperty('--header-h', headerH + 'px');
-    root.style.setProperty('--big', big + 'px');
+    // Publish remaining geometry so the CSS spacers stay in sync.
+    root.style.setProperty('--header-pad', headerActual + 'px');
+    root.style.setProperty('--big-w', bigW + 'px');
+    root.style.setProperty('--big-h', bigH + 'px');
+    root.style.setProperty('--slot-mt', slotMt + 'px');
   }
 
   function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
@@ -58,15 +87,15 @@
 
   /* ---- apply the morph for a given progress 0..1 --------------------- */
   function applyProgress(p) {
-    var size = lerp(geo.big, geo.small, p);
+    var w = lerp(geo.bigW, geo.smallW, p);
+    var h = lerp(geo.bigH, geo.smallH, p);
     var left = lerp(geo.bigLeft, geo.smallLeft, p);
     var top = lerp(geo.bigTop, geo.smallTop, p);
 
-    brand.style.width = size + 'px';
-    brand.style.height = size + 'px';
+    brand.style.width = w + 'px';
+    brand.style.height = h + 'px';
     brand.style.left = left + 'px';
     brand.style.top = top + 'px';
-    brand.style.borderRadius = lerp(14, 10, p) + 'px';
 
     // Header bar fades in once the image starts docking.
     header.classList.toggle('scrolled', p > 0.04);
@@ -87,7 +116,7 @@
     ticking = true;
     requestAnimationFrame(function () {
       // Morph completes by the time the big image would scroll off the top.
-      var end = geo.bigTop + geo.big;
+      var end = geo.bigTop + geo.bigH;
       var p = clamp(window.scrollY / end, 0, 1);
       applyProgress(p);
       ticking = false;
@@ -113,9 +142,8 @@
   if (!docked) {
     window.addEventListener('scroll', onScroll, { passive: true });
   }
-  // Re-run once the placeholder image has painted (real photo may differ).
-  var img = document.getElementById('brandImg');
-  if (img && !img.complete) img.addEventListener('load', render);
+  // Re-run once the image has loaded, so geometry uses its real aspect ratio.
+  if (brandImg && !brandImg.complete) brandImg.addEventListener('load', render);
 
   /* ---- reveal sections on scroll ------------------------------------ */
   var revealables = document.querySelectorAll('.reveal');

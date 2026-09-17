@@ -6,7 +6,7 @@
   <title>Ojas Gupta</title>
   <meta name="description" content="Ojas Gupta — computational structural biology & protein machine learning." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="stylesheet" href="css/style.css?v=2" />
+  <link rel="stylesheet" href="css/style.css?v=6" />
 </head>
 <body id="top">
 
@@ -39,14 +39,15 @@
        to the top (home). Sizing/position is driven from main.js.
        ============================================================ -->
   <a class="brand" id="brand" href="#top" aria-label="Ojas Gupta — back to top">
-    <!-- TODO: replace this placeholder data-URI with a real photo/logo,
-         e.g. src="assets/images/hero.jpg". Keep it roughly square. -->
+    <!-- "OJAS" rendered as protein structures. Wide, transparent PNG.
+         To swap: replace assets/images/ojas.png (any aspect ratio is fine —
+         main.js reads the image's dimensions and sizes the morph to match). -->
     <img
       class="brand__img"
       id="brandImg"
-      alt="Ojas Gupta"
+      alt="OJAS spelled out in protein ribbon structures"
       decoding="async"
-      src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23161b18'/><stop offset='1' stop-color='%232a332d'/></linearGradient></defs><rect width='600' height='600' fill='url(%23g)'/><text x='50%25' y='53%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia, serif' font-size='150' font-weight='700' fill='%23e9efe9' letter-spacing='6'>OJAS</text><text x='50%25' y='72%25' text-anchor='middle' dominant-baseline='middle' font-family='system-ui, sans-serif' font-size='24' fill='%237f8c82' letter-spacing='2'>PLACEHOLDER IMAGE</text></svg>"
+      src="assets/images/ojas.png?v=1"
     />
   </a>
 
@@ -59,7 +60,7 @@
     <div class="hero__text" id="heroText">
       <h1 class="hero__name">Ojas Gupta</h1>
       <p class="hero__tagline">
-        Computational structural biology &amp; protein machine learning
+        Biophysics &amp; computational biology
       </p>
       <p class="hero__scroll">scroll ↓</p>
     </div>
@@ -71,11 +72,20 @@
     <section class="section section--about reveal" id="about">
       <p class="section__kicker">About</p>
       <p class="lede">
-        I'm a biomedical engineering senior at Georgia Tech working in
-        computational structural biology and protein machine learning.
-        I'm a DSI Scholar at the NIH/NLM in the Porter lab, with a minor
-        in Chemistry &amp; Biochemistry.
+        I am a biomedical engineering senior at Georgia Tech with a minor
+        in Chemistry &amp; Biochemistry. I am working in
+        computational structural biology with the goal of designing more effective drugs.
+        I am also passionate about translation of laboratory results and effective communication to the general public,
+        as science should be understandable by and work for everyone.
       </p>
+    </section>
+
+    <!-- ================= QUOTE ================= -->
+    <section class="section quote-section reveal" aria-label="Quote">
+      <figure class="quote">
+        <blockquote class="quote__text">The saddest aspect of life right now is that science gathers knowledge faster than society gathers wisdom.</blockquote>
+        <figcaption class="quote__by">— Isaac Asimov</figcaption>
+      </figure>
     </section>
 
     <!-- ================= RESEARCH ================= -->
@@ -89,8 +99,9 @@
         <div class="entry__body">
           <h3 class="entry__title">Fold-switching protein prediction</h3>
           <p>
-            Predicting metamorphic proteins that adopt more than one stable
-            fold — a blind spot for single-structure predictors.
+            Probing the amount of fold-switching proteins in the human genome.
+            Fold-switching proteins adopt more than one stable fold, defying the current protein-folding paradigm. The total number of fold-switching proteins is thought to be significantly
+            underreported and is of great interest to biologists and physicists.
           </p>
           <!-- Funnels into the consolidated "research journey" post. -->
           <a class="link" href="blog/research-journey.html#fold-switching">Blog →</a>
@@ -104,8 +115,9 @@
         <div class="entry__body">
           <h3 class="entry__title">DNA–protein hybrid nanostructures</h3>
           <p>
-            Work with Dr. Shawn Douglas on engineered DNA–protein hybrid
-            assemblies.
+            Working on designing a de-novo orthogonal protein-DNA binder to functionalize DNA "origami" nanostructures.
+            DNA nanostructures hold significant potential in bio-engineering applications. Any functionality typically requires introducing a protein to the DNA
+            nanostructure, which is currently not straightforward.
           </p>
           <!-- Funnels into the consolidated "research journey" post. -->
           <a class="link" href="blog/research-journey.html#dna-protein">Blog →</a>
@@ -114,13 +126,15 @@
 
       <article class="entry reveal">
         <div class="entry__meta">
-          <span class="entry__where">Emory University</span>
+          <span class="entry__where">Emory University · Quiroz Lab</span>
         </div>
         <div class="entry__body">
-          <h3 class="entry__title">Intrinsically disordered proteins</h3>
+          <h3 class="entry__title">Intrinsically disordered protein polymers</h3>
           <p>
-            Studying the conformational behavior of intrinsically disordered
-            proteins (IDPs).
+            Intrinsically disordered proteins lack a defined structure and shift dynamically between several shapes. Intrinsically disordered protein polymers
+            are an engineered class of molecules that go one step further and can form synthetic condensates, a localized separate compartment within a cell similar to an oil droplet in water.
+            When functionalized into an organelle, these could achieve various synthetic biology applications such as augmented cells, but they currently face several implementation hurdles.
+            I was working on establishing orthogonality, or independence, to human cellular processes.
           </p>
           <!-- Funnels into the consolidated "research journey" post. -->
           <a class="link" href="blog/research-journey.html#idp">Blog →</a>
@@ -129,18 +143,35 @@
 
       <article class="entry reveal">
         <div class="entry__meta">
-          <span class="entry__where">Kane Lab · npj Viruses</span>
+          <span class="entry__where">Georgia Tech · Kane lab</span>
         </div>
         <div class="entry__body">
           <h3 class="entry__title">Nanobody engineering</h3>
           <p>
-            Single-domain antibody work contributing to a published study in
+            A nanobody is a class of antibodies inspired by the Camelid family (Camels, etc.) that could offer better performance and manufacturing metrics compared to normal antibodies.
+            I was in charge of using directed evolution, an experimental process that mimics natural selection, to improve nanobody design for 
+            the COVID-19 XBB variant, contributing to a published study in
             <em>npj Viruses</em>.
           </p>
           <div class="entry__links">
             <a class="link" href="blog/research-journey.html#nanobody">Blog →</a>
             <a class="link" href="https://pubmed.ncbi.nlm.nih.gov/40295895/"
                target="_blank" rel="noopener">Paper →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry reveal">
+        <div class="entry__meta">
+          <span class="entry__where">University of Tokyo · Kim lab</span>
+        </div>
+        <div class="entry__body">
+          <h3 class="entry__title">Virus microneedle delivery</h3>
+          <p>
+            TODO.
+          </p>
+          <div class="entry__links">
+            <a class="link" href="blog/research-journey.html#idp">Blog →</a>
           </div>
         </div>
       </article>
@@ -202,6 +233,6 @@
 
   </main>
 
-  <script src="js/main.js" defer></script>
+  <script src="js/main.js?v=3" defer></script>
 </body>
 </html>
