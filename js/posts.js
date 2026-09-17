@@ -22,6 +22,13 @@ window.BLOG_POSTS = [
     pinned: true
   },
   {
+    slug: 'ai-protein-biology',
+    title: 'An introduction to AI and protein biology',
+    date: '2026-09-17',                          // TODO: confirm publish date
+    note: 'What I am currently spending all my time working on.',
+    pinned: false
+  },
+  {
     slug: 'bioconnect',
     title: 'Building BioConnect',
     date: '2025-06-01',                          // TODO: real publish date
