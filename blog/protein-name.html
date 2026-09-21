@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The proteins behind my name — Ojas Gupta</title>
+  <meta name="description" content="Where the OJAS protein lettering on the homepage comes from — an alphabet of crystal structures." />
+  <link rel="stylesheet" href="../css/style.css?v=10" />
+</head>
+<body id="top">
+
+  <header class="site-header" id="siteHeader">
+    <div class="site-header__inner">
+      <span class="site-header__brand-slot" aria-hidden="true"></span>
+      <nav class="nav" aria-label="Primary">
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#research">Research</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../index.html#resume">Resume</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <a class="brand" id="brand" href="../index.html" aria-label="Ojas Gupta — home">
+    <img
+      class="brand__img"
+      id="brandImg"
+      alt="OJAS spelled out in protein structure cartoon"
+      decoding="async"
+      src="../assets/images/ojas.png?v=1"
+    />
+  </a>
+
+  <main class="page">
+    <article class="post">
+      <!-- TODO: confirm publish date (keep in sync with js/posts.js) -->
+      <p class="post__date">September 15, 2026</p>
+      <h1 class="post__title">Protein name visualization</h1>
+      <p class="post__where">Where the protein lettering on the homepage comes from</p>
+
+      <div class="post__body">
+        <p>
+          The proteins spelling <strong>OJAS</strong> at the top of this site
+          are real crystal structures of real proteins
+          that happens to look like English letters. They come from Mark Howarth, who
+          went through the Protein Data Bank manually to find a protein
+          resembling every letter of the alphabet.
+        </p>
+        <p>
+          To understand what is the Protein Data Bank and why we can represent a "real protein crystal" with a
+          bunch of loops and ribbons (which might feel silly at first), please
+          see my previous
+          <a class="link" href="protein-structure-intro.html">blog post</a>.
+        </p>
+        <p class="post__cite">
+          M. Howarth, &ldquo;Say it with proteins: an alphabet of crystal
+          structures,&rdquo; <em>Nature Structural &amp; Molecular Biology</em>
+          22, 349 (2015),
+          <a class="link" href="https://doi.org/10.1038/nsmb.3011"
+             target="_blank" rel="noopener">https://doi.org/10.1038/nsmb.3011</a>.
+        </p>
+        <p>
+          More information about the proteins representing the four letters in my name, pulled directly from Supplementary Table 1 of the paper:
+        </p>
+
+        <div class="post__table-wrap">
+          <table class="post__table">
+            <thead>
+              <tr>
+                <th scope="col">Letter</th>
+                <th scope="col">PDB</th>
+                <th scope="col">Function</th>
+                <th scope="col">Structure</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>O</td>
+                <td><a class="link" href="https://www.rcsb.org/structure/2wcd"
+                       target="_blank" rel="noopener">2wcd</a></td>
+                <td>Bacterial toxin</td>
+                <td>Cytolysin A from <em>Escherichia coli</em>; 12 copies of a
+                    3-helix bundle.</td>
+              </tr>
+              <tr>
+                <td>J</td>
+                <td><a class="link" href="https://www.rcsb.org/structure/1b3u"
+                       target="_blank" rel="noopener">1b3u</a></td>
+                <td>Intracellular signaling</td>
+                <td>PR65/A subunit of Protein Phosphatase 2A from
+                    <em>Homo sapiens</em>; contains 15 HEAT motifs.</td>
+              </tr>
+              <tr>
+                <td>A</td>
+                <td><a class="link" href="https://www.rcsb.org/structure/3ifz"
+                       target="_blank" rel="noopener">3ifz</a></td>
+                <td>DNA topology</td>
+                <td>DNA gyrase reaction core from
+                    <em>Mycobacterium tuberculosis</em>; a target of antibiotics.</td>
+              </tr>
+              <tr>
+                <td>S</td>
+                <td><a class="link" href="https://www.rcsb.org/structure/2ot8"
+                       target="_blank" rel="noopener">2ot8</a></td>
+                <td>Nuclear import</td>
+                <td>Transportin-1 from <em>Homo sapiens</em> recognizing a
+                    nuclear localization signal; contains HEAT repeats.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="post__cite">
+          Structure details from the Supplementary Information of Howarth
+          (2015), Supplementary Table 1.
+        </p>
+      </div>
+
+      <a class="back-link" href="../blog.html">← All posts</a>
+    </article>
+  </main>
+
+  <script src="../js/main.js?v=4" defer></script>
+  <script src="../js/comments.js?v=2" defer></script>
+</body>
+</html>

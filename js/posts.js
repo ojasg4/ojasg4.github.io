@@ -14,24 +14,37 @@
    ============================================================= */
 window.BLOG_POSTS = [
   {
+    slug: 'protein-structure-intro',
+    title: 'A quick introduction to protein structure',
+    date: '2026-09-21',
+    note: 'New to this field? START HERE!!',
+    pinned: true
+  },
+  {
     slug: 'research-journey',
     title: 'My research journey',
-    date: '2025-08-15',                          // TODO: real publish date
-    note: 'What I took away from each lab — fold-switching at NIH/NLM, ' +
-          'DNA–protein hybrids at UCSF, IDPs at Emory, and nanobodies in the Kane Lab.',
-    pinned: true
+    date: '2026-09-16',                          // TODO: real publish date
+    note: 'How I got to where I am. ',
+    pinned: false
   },
   {
     slug: 'ai-protein-biology',
     title: 'An introduction to AI and protein biology',
-    date: '2026-09-17',                          // TODO: confirm publish date
+    date: '2026-09-21',
     note: 'What I am currently spending all my time working on.',
+    pinned: true
+  },
+  {
+    slug: 'protein-name',
+    title: 'Protein name visualization',
+    date: '2026-09-15',                        
+    note: 'Where the protein lettering on the homepage comes from.',
     pinned: false
   },
   {
     slug: 'bioconnect',
     title: 'Building BioConnect',
-    date: '2025-06-01',                          // TODO: real publish date
+    date: '2026-09-16',
     note: 'Founding and running a 150+ member biotech student org.',
     pinned: false
   }

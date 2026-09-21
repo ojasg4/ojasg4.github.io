@@ -488,6 +488,38 @@ a { color: inherit; }
   padding-left: 1rem;
 }
 .post__cite a { overflow-wrap: anywhere; }
+
+/* Data table (scrolls horizontally on narrow screens) */
+.post__table-wrap { overflow-x: auto; margin-top: 1.75rem; }
+.post__table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 460px;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.post__table th,
+.post__table td {
+  text-align: left;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: top;
+}
+.post__table thead th {
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.post__table td:first-child {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.post__table td { color: var(--fg-dim); }
+.post__table td:first-child { color: var(--fg); }
 .back-link {
   display: inline-block;
   margin-top: clamp(3rem, 8vh, 5rem);
