@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>A quick introduction to protein structure — Ojas Gupta</title>
   <meta name="description" content="A quick introduction to protein structure — the starting point for the field I love." />
-  <link rel="stylesheet" href="../css/style.css?v=11" />
+  <link rel="stylesheet" href="../css/style.css?v=14" />
 </head>
 <body id="top">
 
@@ -16,7 +16,7 @@
         <a href="../index.html#about">About</a>
         <a href="../index.html#research">Research</a>
         <a href="../index.html#projects">Projects</a>
-        <a href="../blog.html">Blog</a>
+        <a href="../blog.html" aria-current="page">Blog</a>
         <a href="../index.html#resume">Resume</a>
         <a href="../index.html#contact">Contact</a>
       </nav>
@@ -36,8 +36,10 @@
   <main class="page">
     <article class="post">
       <!-- TODO: confirm publish date (keep in sync with js/posts.js) -->
-      <p class="post__date">September 21, 2026</p>
       <h1 class="post__title">A quick introduction to protein structure – START HERE!!</h1>
+      <p class="post__meta">
+        <span class="post__date">September 21, 2026</span>
+      </p>
 
       <div class="post__body">
         <p>
@@ -45,13 +47,47 @@
           <a class="link" href="ai-protein-biology.html">AI and protein
           biology</a> blog post next.
         </p>
+
+        <h2 id="arrows-and-coils">Arrows and coils</h2>
+
+        <!-- Click-through figure (js/fold-story.js). Each <li> is one click;
+             edit the wording here. data-scene picks what the figure shows. -->
+        <figure class="story" id="foldStory" tabindex="0"
+                data-done="Scroll down to keep reading"
+                aria-label="Arrows and coils: a click-through animation of how a protein structure is described">
+          <ol class="story__steps">
+            <li data-scene="chain">Proteins are the fundamental building blocks of life. Proteins are long chains, or polymers, made up of unique building blocks called amino acids.</li>
+            <li data-scene="aminos">Humans work with 21 standard amino acids, and the unique order of these amino acids is called the protein sequence.</li>
+            <li data-scene="circles">For this exercise, we will simplify these amino acids as circles.</li>
+            <li data-scene="dogma">Traditionally, every unique protein sequence corresponds to one unique protein structure, which corresponds to one unique protein function. So in order to navigate the role of proteins in human health and disease, scientists often want to know all three steps of this pathway.</li>
+            <li data-scene="fold">The biggest problem out of these three is the structure, as proteins are found in a much more compact seemingly random mess called a protein fold.
+              <small>A helpful analogy is wired earbuds or a ball of yarn, depending on your age :) – they are both linear on paper but are always found in a seemingly random tangled mess in nature.</small></li>
+            <li data-scene="ribbon">Then the question arises, how do we make sense of this random tangled mess? Scientists have identified two important backbones: alpha helices and beta strands.</li>
+            <li data-scene="helix">Scientists have identified two important backbones: <em class="h">alpha helices</em> and beta strands.</li>
+            <li data-scene="strand">Scientists have identified two important backbones: <em class="h">alpha helices</em> and <em class="s">beta strands</em>.</li>
+            <li data-scene="solved">Congratulations, you might have just solved your first protein structure, which mainly involves assigning these two patterns everywhere that they exist from the linear protein <em>tangle</em>, or fold. Historically, this takes years!</li>
+            <li data-scene="spheres">I also thought it was a little bit strange that scientists use <em>arrows and coils</em> to describe what a protein looks like. For the record, here is a more accurate representation.</li>
+            <li data-scene="cartoon">But arrows and coils are a much less intimidating representation that effectively conveys all the important patterns in a protein backbone.</li>
+          </ol>
+        </figure>
+
+        <!-- TODO: placeholder text. Edit or replace these paragraphs. -->
+        <p>
+          Placeholder: this is where the post continues after the animation. Replace this
+          paragraph with your own text.
+        </p>
+        <p>
+          Placeholder: a second paragraph, so you can see the spacing between paragraphs
+          under the figure.
+        </p>
       </div>
 
       <a class="back-link" href="../blog.html">← All posts</a>
     </article>
   </main>
 
-  <script src="../js/main.js?v=4" defer></script>
-  <script src="../js/comments.js?v=2" defer></script>
+  <script src="../js/main.js?v=9" defer></script>
+  <script src="../js/comments.js?v=3" defer></script>
+  <script src="../js/fold-story.js?v=4" defer></script>
 </body>
 </html>

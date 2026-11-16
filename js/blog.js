@@ -7,6 +7,7 @@
 
   var list = document.getElementById('postList');
   if (!list) return;
+  
 
   var posts = (window.BLOG_POSTS || []).slice();
 
@@ -44,8 +45,25 @@
 
   function renderItem(p) {
     var a = document.createElement('a');
-    a.className = 'post-item';
+    a.className = 'post-item' + (p.pinned ? ' post-item--pinned' : '');
     a.href = 'blog/' + p.slug + '.html';
+
+    // Plotted point: pinned posts are larger and ringed.
+    var dot = document.createElement('span');
+    dot.className = 'post-item__dot';
+    dot.setAttribute('aria-hidden', 'true');
+
+    var body = document.createElement('div');
+    var title = document.createElement('h2');
+    title.className = 'post-item__title';
+    title.textContent = p.title;
+    body.appendChild(title);
+    if (p.note) {
+      var note = document.createElement('p');
+      note.className = 'post-item__excerpt';
+      note.textContent = p.note;
+      body.appendChild(note);
+    }
 
     var meta = document.createElement('p');
     meta.className = 'post-item__date';
@@ -54,23 +72,12 @@
       var badge = document.createElement('span');
       badge.className = 'post-item__pin';
       badge.textContent = 'Pinned';
-      meta.appendChild(document.createTextNode(' '));
       meta.appendChild(badge);
     }
 
-    var title = document.createElement('h2');
-    title.className = 'post-item__title';
-    title.textContent = p.title;
-
+    a.appendChild(dot);
+    a.appendChild(body);
     a.appendChild(meta);
-    a.appendChild(title);
-
-    if (p.note) {
-      var note = document.createElement('p');
-      note.className = 'post-item__excerpt';
-      note.textContent = p.note;
-      a.appendChild(note);
-    }
     return a;
   }
 })();

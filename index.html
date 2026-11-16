@@ -5,8 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ojas Gupta</title>
   <meta name="description" content="Ojas Gupta — computational structural biology & protein machine learning." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="stylesheet" href="css/style.css?v=11" />
+  <link rel="stylesheet" href="css/style.css?v=14" />
+  <script>
+    /* Intro: hide the wordmark until main.js plays the denoising field.
+       Plays on a fresh arrival and on every refresh. Skipped when arriving
+       by a link from another page of this site, on back/forward, when the
+       URL points at a section, or with reduced motion. */
+    (function () {
+      try {
+        var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        var type = nav ? nav.type : 'navigate';
+        var same = document.referrer && new URL(document.referrer).origin === location.origin;
+        var rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var section = location.hash && location.hash !== '#top';
+        var play = !rm && !section && (type === 'reload' || (type === 'navigate' && !same));
+        if (!play) return;
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        document.documentElement.classList.add('intro-pending');
+        setTimeout(function () {
+          if (!window.__introStarted) document.documentElement.classList.remove('intro-pending');
+        }, 5000);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body id="top">
 
@@ -49,6 +70,11 @@
       decoding="async"
       src="assets/images/ojas.png?v=1"
     />
+    <!-- Hover a letter (desktop) to see which protein it is. -->
+    <span class="brand__spot" style="left:-1%;width:25%" aria-hidden="true"><span class="brand__note">Cytolysin A, a bacterial toxin</span></span>
+    <span class="brand__spot" style="left:22.5%;width:23%" aria-hidden="true"><span class="brand__note">Protein phosphatase 2A, PR65/A subunit</span></span>
+    <span class="brand__spot" style="left:47.5%;width:28.5%" aria-hidden="true"><span class="brand__note">DNA gyrase reaction core</span></span>
+    <span class="brand__spot" style="left:77%;width:24%" aria-hidden="true"><span class="brand__note">Transportin-1, nuclear import</span></span>
   </a>
 
   <!-- ============================================================
@@ -62,7 +88,7 @@
       <p class="hero__tagline">
         Biophysics &amp; computational biology
       </p>
-      <p class="hero__scroll">scroll ↓</p>
+      <p class="hero__scroll">Scroll</p>
     </div>
   </section>
 
@@ -70,7 +96,7 @@
 
     <!-- ================= ABOUT ================= -->
     <section class="section section--about reveal" id="about">
-      <p class="section__kicker">About</p>
+      <h2 class="section__title">About</h2>
       <p class="lede">
         I am a biomedical engineering senior at Georgia Tech with a minor
         in Chemistry &amp; Biochemistry. I am working in
@@ -91,7 +117,7 @@
 
     <!-- ================= RESEARCH ================= -->
     <section class="section section--research" id="research">
-      <p class="section__kicker reveal">Research</p>
+      <h2 class="section__title">Research</h2>
 
       <article class="entry reveal">
         <div class="entry__meta">
@@ -178,7 +204,7 @@
 
     <!-- ================= PROJECTS ================= -->
     <section class="section section--projects" id="projects">
-      <p class="section__kicker reveal">Projects</p>
+      <h2 class="section__title">Projects</h2>
 
       <div class="projects">
         <article class="project reveal">
@@ -208,7 +234,7 @@
 
     <!-- ================= RESUME ================= -->
     <section class="section section--resume reveal" id="resume">
-      <p class="section__kicker">Resume</p>
+      <h2 class="section__title">Resume</h2>
       <p class="lede">
         A full resume is available as a PDF.
       </p>
@@ -219,7 +245,7 @@
 
     <!-- ================= CONTACT / FOOTER ================= -->
     <footer class="section section--contact reveal" id="contact">
-      <p class="section__kicker">Contact</p>
+      <h2 class="section__title">Contact</h2>
       <ul class="contact-list">
         <li><a class="link" href="mailto:ojasgupta1000@gmail.com">Email</a></li>
         <li><a class="link" href="https://www.linkedin.com/in/ojas--gupta/"
@@ -231,6 +257,6 @@
 
   </main>
 
-  <script src="js/main.js?v=4" defer></script>
+  <script src="js/main.js?v=9" defer></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>An introduction to AI and protein biology — Ojas Gupta</title>
   <meta name="description" content="An introduction to AI and protein biology — what I'm currently spending all my time working on." />
-  <link rel="stylesheet" href="../css/style.css?v=11" />
+  <link rel="stylesheet" href="../css/style.css?v=14" />
 </head>
 <body id="top">
 
@@ -16,7 +16,7 @@
         <a href="../index.html#about">About</a>
         <a href="../index.html#research">Research</a>
         <a href="../index.html#projects">Projects</a>
-        <a href="../blog.html">Blog</a>
+        <a href="../blog.html" aria-current="page">Blog</a>
         <a href="../index.html#resume">Resume</a>
         <a href="../index.html#contact">Contact</a>
       </nav>
@@ -36,9 +36,11 @@
   <main class="page">
     <article class="post">
       <!-- TODO: real publish date (keep in sync with js/posts.js) -->
-      <p class="post__date">September 21, 2026</p>
       <h1 class="post__title">An introduction to AI and protein biology</h1>
-      <p class="post__where">What I am currently spending all my time working on</p>
+      <p class="post__meta">
+        <span class="post__date">September 21, 2026</span>
+        <span class="post__where">What I am currently spending all my time working on</span>
+      </p>
 
       <div class="post__body">
         <p>
@@ -54,13 +56,37 @@
           <a class="link" href="https://doi.org/10.1002/wcms.70082"
              target="_blank" rel="noopener">https://doi.org/10.1002/wcms.70082</a>.
         </p>
+
+        <!-- Synopsis drafted from the paper's published abstract (the full text
+             was not accessible when this was written). Edit freely. -->
+        <h2>A brief synopsis</h2>
+        <p>
+          The review surveys how deep learning is used to model the shapes proteins
+          take, and it organizes the field into three goals: predicting a single
+          structure for one protein, predicting the structure of a bound complex, and
+          generating the whole ensemble of conformations a protein visits. Its particular angle is architectural: it traces the design
+          choices that recur across these models. Examples are whether a network has
+          rotational and translational symmetry built in (SE(3) equivariance) or is
+          left to learn it, whether evolutionary information comes from a multiple
+          sequence alignment or from a protein language model, and whether the model
+          returns one deterministic answer or samples from a generative process.
+        </p>
+        <p>
+          The authors&rsquo; assessment is that single-structure prediction is now
+          relatively mature, while the other two goals are still open problems.
+          Predicting bound complexes remains hard, and so does generating
+          thermodynamic ensembles in which each conformation carries a reliable
+          population weight, meaning how often the protein actually adopts it. They
+          point to generative kinetics, models that capture how a protein moves
+          between states over time, as a longer-term frontier.
+        </p>
       </div>
 
       <a class="back-link" href="../blog.html">← All posts</a>
     </article>
   </main>
 
-  <script src="../js/main.js?v=4" defer></script>
-  <script src="../js/comments.js?v=2" defer></script>
+  <script src="../js/main.js?v=9" defer></script>
+  <script src="../js/comments.js?v=3" defer></script>
 </body>
 </html>
