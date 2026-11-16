@@ -3,8 +3,9 @@
    1. Morph the protein wordmark from a large hero plate into the
       small header logo as the user scrolls. All geometry is
       recomputed from the current viewport.
-   2. First-visit intro: a field of noise denoises into the atoms of
-      the four structures, then the cartoon render fades in over them.
+   2. Intro: a sparse field of particles the visitor can push around;
+      a click denoises it into the atoms of the four structures, then
+      the cartoon render fades in over them.
    No dependencies, no build step.
    ============================================================= */
 (function () {
@@ -168,10 +169,13 @@
       var total = Math.floor(data.length / 3);
       var n = Math.min(total, window.innerWidth < 700 ? 15000 : total);
 
-      // Per-atom: target (u,v in image space), a fixed Gaussian noise vector,
+      // Per-atom: target (u,v in image space), a random home anywhere on the
+      // screen, an offset from being pushed around (DX, DY) with its velocity,
       // and colour. File order is pre-shuffled, so a prefix is a fair sample.
       var U = new Float32Array(n), V = new Float32Array(n);
       var EX = new Float32Array(n), EY = new Float32Array(n);
+      var DX = new Float32Array(n), DY = new Float32Array(n);
+      var VX = new Float32Array(n), VY = new Float32Array(n);
       var R = new Uint8Array(n), G = new Uint8Array(n), B = new Uint8Array(n);
       var i;
       for (i = 0; i < n; i++) {
@@ -179,7 +183,7 @@
         V[i] = data[i * 3 + 1] / 65535 * 1.1 - 0.05;
         var c = data[i * 3 + 2];
         R[i] = (c >> 11) * 255 / 31; G[i] = ((c >> 5) & 63) * 255 / 63; B[i] = (c & 31) * 255 / 31;
-        var g = gauss(); EX[i] = g[0]; EY[i] = g[1];
+        EX[i] = Math.random() - 0.5; EY[i] = Math.random() - 0.5;
       }
       // Jitter table: cheap per-frame noise so the field simmers while noisy.
       var JN = 4096, JT = new Float32Array(JN);
@@ -199,73 +203,144 @@
       size();
       window.addEventListener('resize', size);
 
-      var T_HOLD = 900, T_DENOISE = 6200, T_SETTLE = 900, T_FADE = 2600;
-      var NOISE0 = 0.36;                               // starting noise level (1 = pure noise)
-      var start = performance.now(), done = false, revealed = false, frame = 0;
+      /* Tunables */
+      var T_DENOISE = 6200, T_SETTLE = 900, T_FADE = 2600;
+      var IDLE_DENSITY = 0.08;                         // share of the points drifting before the click
+      var FAST_START = 2.4;                            // > 1: the first frames move faster, the end settles slowly
+      var REACH = 120;                                 // how far the pointer pushes, in CSS pixels
+      var PUSH = 2600, STIR = 9;                       // hover push strength; how much a drag carries points along
+
+      // The field waits, drifting, until a click (or key) starts the denoising.
+      var phase = 'idle', start = 0, done = false, revealed = false, frame = 0, last = 0;
+      var mouse = { x: -1e5, y: -1e5, vx: 0, vy: 0, down: false, moved: 0, dragged: false, seen: 0 };
+
+      var hint = document.createElement('p');
+      hint.className = 'intro-hint';
+      hint.textContent = window.matchMedia('(hover: none)').matches ? 'Tap to begin' : 'Click to begin';
+      document.body.appendChild(hint);
+
+      function begin() {
+        if (phase !== 'idle') return;
+        phase = 'run';
+        start = performance.now();
+        hint.classList.add('is-off');
+      }
+
+      function onMove(e) {
+        var x = e.clientX * scale, y = e.clientY * scale, now = performance.now();
+        var dt = Math.max(8, now - mouse.seen);
+        if (mouse.seen && dt < 120) { mouse.vx = (x - mouse.x) / dt * 16; mouse.vy = (y - mouse.y) / dt * 16; }
+        if (mouse.down) { mouse.moved += Math.abs(x - mouse.x) + Math.abs(y - mouse.y); if (mouse.moved > 10 * scale) mouse.dragged = true; }
+        mouse.x = x; mouse.y = y; mouse.seen = now;
+      }
+      function onDown(e) { onMove(e); mouse.down = true; mouse.moved = 0; mouse.dragged = false; }
+      function onUp() { mouse.down = false; }
+      function onLeave() { mouse.x = mouse.y = -1e5; mouse.down = false; }
+      // A click that was not a drag starts the denoising; a second click skips to the site.
+      // Clicks never reach the (still hidden) page underneath.
+      function onClick(e) {
+        e.preventDefault(); e.stopPropagation();
+        if (mouse.dragged) { mouse.dragged = false; return; }
+        if (phase === 'idle') begin(); else finish();
+      }
+      function onKey(e) {
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (phase === 'idle' && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); begin(); }
+        else finish();
+      }
+      var LEAVE = ['scroll', 'wheel', 'touchmove'];    // any intent to scroll ends the intro at once
 
       function finish() {
         if (done) return;
         done = true;
         window.removeEventListener('resize', size);
-        ['scroll', 'wheel', 'touchmove', 'keydown', 'pointerdown'].forEach(function (ev) {
-          window.removeEventListener(ev, finish);
-        });
+        LEAVE.forEach(function (ev) { window.removeEventListener(ev, finish); });
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerdown', onDown);
+        window.removeEventListener('pointerup', onUp);
+        document.documentElement.removeEventListener('pointerleave', onLeave);
+        window.removeEventListener('click', onClick, true);
+        window.removeEventListener('keydown', onKey);
+        if (hint.parentNode) hint.parentNode.removeChild(hint);
         endIntro(canvas);
       }
-      // Any intent to move on ends the intro immediately.
-      ['scroll', 'wheel', 'touchmove', 'keydown', 'pointerdown'].forEach(function (ev) {
-        window.addEventListener(ev, finish, { passive: true });
-      });
+      LEAVE.forEach(function (ev) { window.addEventListener(ev, finish, { passive: true }); });
+      window.addEventListener('pointermove', onMove, { passive: true });
+      window.addEventListener('pointerdown', onDown, { passive: true });
+      window.addEventListener('pointerup', onUp, { passive: true });
+      document.documentElement.addEventListener('pointerleave', onLeave);
+      window.addEventListener('click', onClick, true);
+      window.addEventListener('keydown', onKey);
 
       function tick(now) {
         if (done) return;
         if (window.scrollY > 8) { finish(); return; }   // scrolled away: stop at once
-        var el = now - start;
-        var t = clamp((el - T_HOLD) / T_DENOISE, 0, 1);
-        t = t * t * (3 - 2 * t);                       // ease the schedule ends
-        var s = NOISE0 * Math.cos(t * Math.PI / 2);    // noise   = sqrt(1 - alpha-bar)
+        var dt = last ? Math.min(now - last, 50) / 1000 : 0.016;
+        last = now;
+        var el = phase === 'run' ? now - start : 0;
+        var t = clamp(el / T_DENOISE, 0, 1);
+        var s = Math.pow(1 - t, FAST_START);           // noise: 1 = scattered over the whole screen
         var a = Math.sqrt(1 - s * s);                  // signal  = sqrt(alpha-bar)
         var mix = t;                                   // chalk points take on their colours
+        var grow = clamp(t / 0.45, 0, 1);              // sparse at first, then every point joins in
+        var shown = Math.round(n * (IDLE_DENSITY + (1 - IDLE_DENSITY) * grow * grow * (3 - 2 * grow)));
 
         var rect = brand.getBoundingClientRect();
         var bx = rect.left * scale, by = rect.top * scale;
         var bw = rect.width * scale, bh = rect.height * scale;
-        var cx = bx + bw / 2, cy = by + bh / 2;
-        var sx = W * 0.2, sy = H * 0.18;               // spread of the noise cloud
         var jit = s * 4 * scale;
         var dot = Math.max(1, Math.round(scale * bw / (900 * scale) * 1.5));
+        if (phase === 'idle') dot = Math.max(dot, Math.round(scale * 1.5));   // few points: draw them a little larger
         var j0 = (frame * 131) % JN;
 
+        // Pointer forces: hovering pushes points away, dragging carries them along.
+        var reach = REACH * scale * (mouse.down ? 1.5 : 1), reach2 = reach * reach;
+        var mx = mouse.x, my = mouse.y, mvx = mouse.down ? mouse.vx : 0, mvy = mouse.down ? mouse.vy : 0;
+        var damp = Math.exp(-dt * 2.2);                // velocities die away
+        var spring = 0.25 + 9 * a * a;                 // weak pull home while idle; strong once denoising
+        var drift = phase === 'idle' ? 14 * scale : 0; // slow wandering while waiting
+        mouse.vx *= 0.85; mouse.vy *= 0.85;
+
         px.fill(0);
-        for (var k = 0; k < n; k++) {
-          var x = cx + a * (bx + U[k] * bw - cx) + s * EX[k] * sx + jit * JT[(k + j0) % JN];
-          var y = cy + a * (by + V[k] * bh - cy) + s * EY[k] * sy + jit * JT[(k * 7 + j0 + 13) % JN];
+        for (var k = 0; k < shown; k++) {
+          var x = a * (bx + U[k] * bw) + (1 - a) * W / 2 + s * EX[k] * W + DX[k] + jit * JT[(k + j0) % JN];
+          var y = a * (by + V[k] * bh) + (1 - a) * H / 2 + s * EY[k] * H + DY[k] + jit * JT[(k * 7 + j0 + 13) % JN];
+
+          var vx = VX[k], vy = VY[k];
+          var ddx = x - mx, ddy = y - my, d2 = ddx * ddx + ddy * ddy;
+          if (d2 < reach2) {
+            var d = Math.sqrt(d2) + 0.01, f = 1 - d / reach;
+            vx += ddx / d * f * PUSH * scale * dt + mvx * f * STIR;
+            vy += ddy / d * f * PUSH * scale * dt + mvy * f * STIR;
+          }
+          vx += (JT[(k * 3 + j0) % JN] * drift - DX[k] * spring) * dt;
+          vy += (JT[(k * 5 + j0 + 7) % JN] * drift - DY[k] * spring) * dt;
+          vx *= damp; vy *= damp;
+          VX[k] = vx; VY[k] = vy;
+          DX[k] += vx * dt; DY[k] += vy * dt;
+
           var xi = x | 0, yi = y | 0;
           if (xi < 0 || yi < 0 || xi > W - dot || yi > H - dot) continue;
           var r = 242 + (R[k] - 242) * mix, gg = 240 + (G[k] - 240) * mix, b = 230 + (B[k] - 230) * mix;
           var col = (255 << 24) | (b << 16) | (gg << 8) | r;   // little-endian ABGR
           var o = yi * W + xi;
-          for (var dy = 0; dy < dot; dy++) for (var dx = 0; dx < dot; dx++) px[o + dy * W + dx] = col;
+          for (var dy = 0; dy < dot; dy++) for (var dxx = 0; dxx < dot; dxx++) px[o + dy * W + dxx] = col;
         }
         ctx.putImageData(img, 0, 0);
         frame++;
 
-        var tReveal = T_HOLD + T_DENOISE + T_SETTLE;
-        if (!revealed && el >= tReveal) {
-          revealed = true;
-          root.classList.add('intro-reveal');          // cartoon fades in over the atoms
-          canvas.style.opacity = '0';                  // atoms fade out beneath it
+        if (phase === 'run') {
+          var tReveal = T_DENOISE + T_SETTLE;
+          if (!revealed && el >= tReveal) {
+            revealed = true;
+            root.classList.add('intro-reveal');          // cartoon fades in over the atoms
+            canvas.style.opacity = '0';                  // atoms fade out beneath it
+          }
+          if (el >= tReveal + T_FADE) { finish(); return; }
         }
-        if (el >= tReveal + T_FADE) { finish(); return; }
         requestAnimationFrame(tick);
       }
       requestAnimationFrame(tick);
-    }
-
-    function gauss() {                                  // Box-Muller pair
-      var u = 1 - Math.random(), v = Math.random();
-      var m = Math.sqrt(-2 * Math.log(u));
-      return [m * Math.cos(2 * Math.PI * v), m * Math.sin(2 * Math.PI * v)];
     }
   }
 })();

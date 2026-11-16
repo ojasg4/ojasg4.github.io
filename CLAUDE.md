@@ -32,8 +32,6 @@ in [PRODUCT.md](PRODUCT.md); the file layout is in [README.md](README.md).
 ## Animation: general
 - Slow is better than fast here. These are explanations, not transitions.
   If a step feels right to me, it is probably too quick for a first-time reader.
-- Start from a state the reader can already half-read (the intro starts with
-  the letters faintly visible, not from pure noise).
 - Do not label things the reader does not need (PDB IDs were removed).
 - Draw from real data where possible (real coordinates, real sequence), and
   say in the README where the data came from.
@@ -44,9 +42,12 @@ in [PRODUCT.md](PRODUCT.md); the file layout is in [README.md](README.md).
 - Always honour `prefers-reduced-motion`: show the end state, no motion.
 - Animate on a canvas or with `transform`/`opacity`. Cap canvas pixel count
   and device pixel ratio (2) so phones keep up.
-- Any intent to move on (scroll, key, click) ends an intro at once.
-- The home intro plays on a fresh arrival and on every refresh, and is skipped
-  when arriving from another page of this site or at a `#section`.
+- The home intro waits as a sparse, interactive particle field (hover pushes,
+  drag carries) and only denoises on a click. A scroll skips it at once, and
+  so does a second click. It always shows a short hint ("Click to begin").
+- It appears on a fresh arrival and on every refresh, and is skipped when
+  arriving from another page of this site or at a `#section`.
+- Prefer letting the reader play with a picture over making them watch it.
 
 ## Animation: click-through figures (`.story`)
 - One figure lives inside the scrolling page, never taller than the screen

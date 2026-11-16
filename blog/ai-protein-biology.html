@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>An introduction to AI and protein biology — Ojas Gupta</title>
   <meta name="description" content="An introduction to AI and protein biology — what I'm currently spending all my time working on." />
-  <link rel="stylesheet" href="../css/style.css?v=14" />
+  <link rel="stylesheet" href="../css/style.css?v=16" />
 </head>
 <body id="top">
 
@@ -80,13 +80,98 @@
           point to generative kinetics, models that capture how a protein moves
           between states over time, as a longer-term frontier.
         </p>
+
+        <h2 id="one-structure-to-many">From one structure to an ensemble</h2>
+
+        <!-- Click-through figure (js/model-story.js). Each <li> is one click;
+             edit the wording here. data-scene picks what the figure shows.
+             TODO: these captions are a first draft. Edit freely. -->
+        <figure class="story" id="modelStory" tabindex="0"
+                data-done="Scroll down to keep reading"
+                aria-label="From one structure to an ensemble: a click-through animation of how structure prediction models work">
+          <ol class="story__steps">
+            <li data-scene="goal">The goal of structure prediction: a protein sequence goes in, and a 3D structure comes out. AlphaFold2 was the first model to do this at close to experimental accuracy. The example here is ubiquitin, a small protein of 76 amino acids.</li>
+            <li data-scene="tokens">The model does not start from atoms. It coarse-grains: every amino acid becomes one <em>token</em>, a list of numbers that the network refines as it goes.</li>
+            <li data-scene="pair">The key design choice is a second representation: a grid with one cell for every <em>pair</em> of amino acids. Each cell is a place to store what the model believes about that pair, above all how far apart the two are.</li>
+            <li data-scene="msa">Where does that information come from? Evolution. The model looks up the same protein in many other species and stacks the sequences into a multiple sequence alignment (MSA).
+              <small>Drawn schematically: a bright cell is a position where a relative differs from our sequence.</small></li>
+            <li data-scene="coevo">When two positions tend to change together across species, it is a hint that they touch in the folded protein: a mutation in one has to be compensated by the other. That hint is written into the pair's cell.</li>
+            <li data-scene="contacts">After dozens of rounds of refinement, the grid describes which amino acids are close together. This is the real distance map of ubiquitin: the thick band along the diagonal is the alpha helix, and the lines running off the diagonal are paired beta strands.</li>
+            <li data-scene="triangle">The refinement keeps the grid geometrically consistent. If <em>i</em> is close to <em>j</em>, and <em>j</em> is close to <em>k</em>, then <em>i</em> and <em>k</em> cannot be far apart. So each pair is updated using the other two sides of every such triangle.</li>
+            <li data-scene="structure">A grid of distances is almost a structure already. The last module turns it into 3D coordinates: the highlighted cell becomes two amino acids, 24 positions apart in the sequence, sitting side by side.</li>
+            <li data-scene="ipa">A protein has no up or down. Turn it and it is the same protein, so the answer should not depend on orientation. AlphaFold2 built this in: every amino acid gets its own local frame, and <em>invariant point attention</em> only looks at geometry relative to those frames.</li>
+            <li data-scene="diffusion">AlphaFold3 dropped that machinery. Its structure module is a diffusion model: it starts from a random cloud and denoises it, guided by the grid. The symmetry is no longer built in; the model learns it from randomly rotated examples.
+              <small>One point per amino acid is drawn here. The real model denoises every atom.</small></li>
+            <li data-scene="cofold">Working on atoms means a token no longer has to be an amino acid. AlphaFold3, Boltz, Chai-1 and other co-folding models put nucleotides and the individual atoms of a ligand into the same token list, and fold the whole complex at once. The cells <em>between</em> molecules (red) describe the interface, and they are the hard part.</li>
+            <li data-scene="snapshot">Everything so far returns one structure, and for single proteins that problem is now relatively mature. But one structure is a snapshot.</li>
+            <li data-scene="ensemble">In solution a protein keeps moving between many conformations: an ensemble. Here are ten experimentally determined models of ubiquitin; the core holds still while the tail flops around. Models such as BioEmu are generative: instead of one answer, they sample thousands of structures like these per hour on a single GPU.</li>
+            <li data-scene="landscape">The real goal is a <em>thermodynamic</em> ensemble: not only which shapes exist, but how often each one is visited, because that sets the free-energy difference between them. BioEmu was trained on static structures, more than 200 milliseconds of molecular dynamics simulation, and experimental stability measurements, and reports free-energy errors of about 1 kcal/mol. Getting these weights right in general is still an open problem.</li>
+          </ol>
+
+          <!-- Opened by the "What is this?" button on the map steps. Edit the
+               wording here; the shades and the two small pictures are drawn
+               by js/model-story.js. TODO: first draft. -->
+          <aside class="story__info" hidden>
+            <h3>How to read this map</h3>
+            <p>
+              Every cell compares two amino acids: one from the row and one from the
+              column. Its brightness says how far apart the two are in the folded
+              protein. The distance is sorted into a few bins, and each bin gets one
+              shade:
+            </p>
+            <ul class="story__bins">
+              <li><i data-bin="0"></i>under 6 Å</li>
+              <li><i data-bin="1"></i>6 to 8 Å</li>
+              <li><i data-bin="2"></i>8 to 11 Å</li>
+              <li><i data-bin="3"></i>11 to 14 Å</li>
+              <li><i data-bin="4"></i>over 14 Å</li>
+            </ul>
+            <p>
+              AlphaFold2 does the same thing with finer bins: for every pair it predicts
+              which of 64 distance bins, between 2 and 22 Å, the pair falls into.
+            </p>
+            <div class="story__examples">
+              <figure>
+                <canvas data-example="line"></canvas>
+                <figcaption>A straight chain. Each amino acid is close only to its
+                  neighbours in the sequence, so only the diagonal lights up.</figcaption>
+              </figure>
+              <figure>
+                <canvas data-example="hairpin"></canvas>
+                <figcaption>The same chain folded in half. Amino acids far apart in the
+                  sequence now face each other, and a second line appears running away
+                  from the diagonal. Lines like this are what reveal the fold.</figcaption>
+              </figure>
+            </div>
+            <p>
+              The diagonal is every amino acid compared with itself, so it is always
+              bright, and the two halves of the map mirror each other.
+            </p>
+          </aside>
+        </figure>
+
+        <!-- TODO: placeholder text. Edit or replace these paragraphs. -->
+        <p>
+          Placeholder: this is where the post continues after the animation. Replace this
+          paragraph with your own text.
+        </p>
+        <p class="post__cite">
+          The figure draws on Elana Simon&rsquo;s
+          <a class="link" href="https://elanapearl.github.io/blog/2024/the-illustrated-alphafold/"
+             target="_blank" rel="noopener">The Illustrated AlphaFold</a>
+          and on S. Lewis et al., &ldquo;Scalable emulation of protein equilibrium
+          ensembles with generative deep learning,&rdquo; <em>Science</em> (2025),
+          <a class="link" href="https://doi.org/10.1126/science.adv9817"
+             target="_blank" rel="noopener">https://doi.org/10.1126/science.adv9817</a>.
+        </p>
       </div>
 
       <a class="back-link" href="../blog.html">← All posts</a>
     </article>
   </main>
 
-  <script src="../js/main.js?v=9" defer></script>
+  <script src="../js/main.js?v=11" defer></script>
   <script src="../js/comments.js?v=3" defer></script>
+  <script src="../js/model-story.js?v=5" defer></script>
 </body>
 </html>
