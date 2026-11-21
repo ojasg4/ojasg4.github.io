@@ -24,8 +24,11 @@
   var N = U.ca.length;
   var SPACING = 3.8;                       // angstroms between neighbouring residues
   var CHAIN_LEN = (N - 1) * SPACING;
-  var SHOWN = 44;                          // Phe45: the one residue drawn with its real side chain
-  var SHOWN_AA = 13;                       // index of Phe in AA
+  // The first residues get their real side chains: Met1 in full, then the next
+  // few fading out, to say "and so on down the chain". [residue index, opacity]
+  var LEAD = [[0, 1], [1, 0.5], [2, 0.26], [3, 0.11]];
+  var SHOWN = LEAD[0][0];
+  function aaIndex(code) { for (var q = 0; q < AA.length; q++) if (AA[q].c === code) return q; return 0; }
   var SPIN_PERIOD = 32;                    // seconds per full turn
 
   var BG = [7, 13, 28], CHALK = [242, 240, 230], AMBER = [255, 179, 107], BLUE = [140, 196, 240];
@@ -408,13 +411,18 @@
         ctx.globalAlpha = 1;
       }
 
-      // one real amino acid travels from the table onto its circle;
-      // its backbone fades on the way so only the side chain is left standing.
+      // the first few amino acids travel from the table onto their circles, one
+      // after another and each fainter than the last; the backbone fades on the
+      // way so only the side chains are left standing.
       if (cur.side > 0.01) {
-        var cell = gridCell(SHOWN_AA), e = ease(clamp01(cur.aa)), bx = BOX[SHOWN_AA];
-        var fromX = cell.x - bx[0] * cell.s, fromY = cell.y + bx[1] * cell.s, to = pts[SHOWN];
-        drawAmino(AA[SHOWN_AA], fromX + (to.x - fromX) * e, fromY + (to.y - fromY) * e - Math.sin(e * Math.PI) * H * 0.03,
-          cell.s, cur.side, 1 - e);
+        LEAD.forEach(function (ld, q) {
+          var ai = aaIndex(U.seq[ld[0]]);
+          var cell = gridCell(ai), e = ease(clamp01(cur.aa * 1.6 - q * 0.2)), bx = BOX[ai];
+          var fromX = cell.x - bx[0] * cell.s, fromY = cell.y + bx[1] * cell.s, to = pts[ld[0]];
+          var s = cell.s + (Math.min(cell.s, gapPx * 0.74) - cell.s) * e;      // shrink to sit beside its neighbours
+          drawAmino(AA[ai], fromX + (to.x - fromX) * e, fromY + (to.y - fromY) * e - Math.sin(e * Math.PI) * H * 0.03,
+            s, cur.side * (1 + (ld[1] - 1) * e), 1 - e);
+        });
       }
     }
 

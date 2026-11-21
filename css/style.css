@@ -288,22 +288,6 @@ html.intro-pending .hero__text,
 html.intro-pending .site-header,
 html.intro-pending .brand__tag { opacity: 0; }
 .brand__tag { transition: opacity 0.7s ease; }
-.intro-hint {
-  position: fixed;
-  left: 50%; bottom: 12vh;
-  transform: translateX(-50%);
-  z-index: 106;
-  margin: 0;
-  font: 600 0.74rem var(--sans);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--amber);
-  pointer-events: none;
-  animation: intro-hint-in 1.2s ease 0.9s both;
-  transition: opacity 0.6s ease;
-}
-.intro-hint.is-off { opacity: 0; animation: none; }
-@keyframes intro-hint-in { from { opacity: 0; } }
 .intro-canvas {
   position: fixed;
   inset: 0;
@@ -311,6 +295,7 @@ html.intro-pending .brand__tag { opacity: 0; }
   height: 100%;
   z-index: 105;
   pointer-events: none;
+  background: var(--sky);            /* plain ground: hides the page's gridlines until the reveal */
   transition: opacity 2.5s ease;
 }
 

@@ -176,6 +176,7 @@
       var EX = new Float32Array(n), EY = new Float32Array(n);
       var DX = new Float32Array(n), DY = new Float32Array(n);
       var VX = new Float32Array(n), VY = new Float32Array(n);
+      var HX = new Float32Array(n), HY = new Float32Array(n);   // each point's own wandering velocity
       var R = new Uint8Array(n), G = new Uint8Array(n), B = new Uint8Array(n);
       var i;
       for (i = 0; i < n; i++) {
@@ -207,23 +208,17 @@
       var T_DENOISE = 6200, T_SETTLE = 900, T_FADE = 2600;
       var IDLE_DENSITY = 0.08;                         // share of the points drifting before the click
       var FAST_START = 2.4;                            // > 1: the first frames move faster, the end settles slowly
-      var REACH = 120;                                 // how far the pointer pushes, in CSS pixels
-      var PUSH = 2600, STIR = 9;                       // hover push strength; how much a drag carries points along
+      var REACH = 95;                                  // how far the pointer pushes, in CSS pixels
+      var PUSH = 240, STIR = 1.6;                       // hover push strength; how much a drag carries points along
 
       // The field waits, drifting, until a click (or key) starts the denoising.
       var phase = 'idle', start = 0, done = false, revealed = false, frame = 0, last = 0;
       var mouse = { x: -1e5, y: -1e5, vx: 0, vy: 0, down: false, moved: 0, dragged: false, seen: 0 };
 
-      var hint = document.createElement('p');
-      hint.className = 'intro-hint';
-      hint.textContent = window.matchMedia('(hover: none)').matches ? 'Tap to begin' : 'Click to begin';
-      document.body.appendChild(hint);
-
       function begin() {
         if (phase !== 'idle') return;
         phase = 'run';
         start = performance.now();
-        hint.classList.add('is-off');
       }
 
       function onMove(e) {
@@ -261,7 +256,6 @@
         document.documentElement.removeEventListener('pointerleave', onLeave);
         window.removeEventListener('click', onClick, true);
         window.removeEventListener('keydown', onKey);
-        if (hint.parentNode) hint.parentNode.removeChild(hint);
         endIntro(canvas);
       }
       LEAVE.forEach(function (ev) { window.addEventListener(ev, finish, { passive: true }); });
@@ -288,7 +282,7 @@
         var rect = brand.getBoundingClientRect();
         var bx = rect.left * scale, by = rect.top * scale;
         var bw = rect.width * scale, bh = rect.height * scale;
-        var jit = s * 4 * scale;
+        var jit = phase === 'run' ? s * 0.9 * scale * clamp(t * 8, 0, 1) : 0;   // faint simmer while denoising
         var dot = Math.max(1, Math.round(scale * bw / (900 * scale) * 1.5));
         if (phase === 'idle') dot = Math.max(dot, Math.round(scale * 1.5));   // few points: draw them a little larger
         var j0 = (frame * 131) % JN;
@@ -297,8 +291,12 @@
         var reach = REACH * scale * (mouse.down ? 1.5 : 1), reach2 = reach * reach;
         var mx = mouse.x, my = mouse.y, mvx = mouse.down ? mouse.vx : 0, mvy = mouse.down ? mouse.vy : 0;
         var damp = Math.exp(-dt * 2.2);                // velocities die away
-        var spring = 0.25 + 9 * a * a;                 // weak pull home while idle; strong once denoising
-        var drift = phase === 'idle' ? 14 * scale : 0; // slow wandering while waiting
+        var spring = 6 + 6 * a * a;                    // pushed points ease back, so the pointer leaves a dimple, not a hole
+        var drift = phase === 'idle' ? 9 * scale : 0;  // typical wandering speed while waiting, px per second
+        // Smooth Brownian motion: every point's velocity wanders on its own (it
+        // forgets its direction over about TAU seconds), so there is no shared
+        // flow and the field stays evenly spread.
+        var TAU = 2.5, keep = 1 - dt / TAU, kick = Math.sqrt(2 * dt / TAU) * drift * 1.73;
         mouse.vx *= 0.85; mouse.vy *= 0.85;
 
         px.fill(0);
@@ -313,8 +311,15 @@
             vx += ddx / d * f * PUSH * scale * dt + mvx * f * STIR;
             vy += ddy / d * f * PUSH * scale * dt + mvy * f * STIR;
           }
-          vx += (JT[(k * 3 + j0) % JN] * drift - DX[k] * spring) * dt;
-          vy += (JT[(k * 5 + j0 + 7) % JN] * drift - DY[k] * spring) * dt;
+          if (drift) {                                 // the point's home wanders and wraps at the edges
+            var hx = HX[k] * keep + kick * (Math.random() * 2 - 1), hy = HY[k] * keep + kick * (Math.random() * 2 - 1);
+            HX[k] = hx; HY[k] = hy;
+            var ex = EX[k] + hx * dt / W, ey = EY[k] + hy * dt / H;
+            EX[k] = ex > 0.5 ? ex - 1 : ex < -0.5 ? ex + 1 : ex;
+            EY[k] = ey > 0.5 ? ey - 1 : ey < -0.5 ? ey + 1 : ey;
+          }
+          vx -= DX[k] * spring * dt;
+          vy -= DY[k] * spring * dt;
           vx *= damp; vy *= damp;
           VX[k] = vx; VY[k] = vy;
           DX[k] += vx * dt; DY[k] += vy * dt;

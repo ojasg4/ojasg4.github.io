@@ -44,7 +44,9 @@ in [PRODUCT.md](PRODUCT.md); the file layout is in [README.md](README.md).
   and device pixel ratio (2) so phones keep up.
 - The home intro waits as a sparse, interactive particle field (hover pushes,
   drag carries) and only denoises on a click. A scroll skips it at once, and
-  so does a second click. It always shows a short hint ("Click to begin").
+  so does a second click. No hint text; the field alone on a plain
+  ground (no gridlines) is the invitation. Idle motion is smooth, independent
+  Brownian motion per particle (no shared flow field: that makes them clump), and the pointer's effect is subtle.
 - It appears on a fresh arrival and on every refresh, and is skipped when
   arriving from another page of this site or at a `#section`.
 - Prefer letting the reader play with a picture over making them watch it.
