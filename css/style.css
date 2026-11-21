@@ -183,49 +183,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   display: block;
 }
 
-/* Catalogue labels over each letter (home page, undocked only). */
-.brand__tag,
-.brand__spot { position: absolute; }
-.brand.is-docked .brand__tag,
-.brand.is-docked .brand__spot { display: none; }
-
-.brand__tag {
-  bottom: calc(100% + 0.5rem);
-  transform: translateX(-50%);
-  font-size: clamp(0.62rem, 1.1vw, 0.76rem);
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  color: var(--amber);
-  white-space: nowrap;
-  opacity: var(--tag-o, 1);
-  pointer-events: none;
-}
-.brand__spot {
-  top: -4%;
-  bottom: -4%;
-  border-radius: 50%;
-  border: 1.5px solid transparent;
-  transition: border-color 0.25s ease;
-}
-.brand__note {
-  position: absolute;
-  top: calc(100% + 0.7rem);
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 1.05rem;
-  color: var(--chalk);
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  pointer-events: none;
-}
-@media (hover: hover) and (min-width: 900px) {
-  .brand__spot:hover { border-color: var(--red); }
-  .brand__spot:hover .brand__note { opacity: 1; }
-}
-
 /* =============================================================
    HERO
    ============================================================= */
@@ -285,9 +242,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 html.intro-pending .brand__img { opacity: 0; }
 html.intro-pending.intro-reveal .brand__img { opacity: 1; transition: opacity 2.5s ease; }
 html.intro-pending .hero__text,
-html.intro-pending .site-header,
-html.intro-pending .brand__tag { opacity: 0; }
-.brand__tag { transition: opacity 0.7s ease; }
+html.intro-pending .site-header { opacity: 0; }
 .intro-canvas {
   position: fixed;
   inset: 0;

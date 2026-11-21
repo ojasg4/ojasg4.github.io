@@ -91,9 +91,6 @@
     brand.style.left = lerp(geo.bigLeft, geo.smallLeft, p) + 'px';
     brand.style.top = lerp(geo.bigTop, geo.smallTop, p) + 'px';
 
-    // Catalogue labels fade as the plate leaves; hover targets switch off.
-    brand.style.setProperty('--tag-o', String(clamp(1 - p * 5, 0, 1)));
-    brand.classList.toggle('is-docked', p > 0.2);
 
     header.classList.toggle('scrolled', p > 0.04);
 
